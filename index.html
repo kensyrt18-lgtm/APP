@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --occidente-green: #006837;
+            --occidente-gold: #b2945e;
+        }
+        .bg-occidente { background-color: var(--occidente-green); }
+        .text-gold { color: var(--occidente-gold); }
+        .card-glass { 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 104, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card-glass:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-primary { background: var(--occidente-green); transition: 0.3s; }
+        .btn-primary:hover { background: #004d29; transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <nav class="sticky top-0 z-50 bg-occidente text-white p-4 shadow-lg flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="bg-white p-1 rounded">
+                <i class="fas fa-university text-green-800 text-xl"></i>
+            </div>
+            <span class="font-bold tracking-tight text-lg">Banco de Occidente</span>
+        </div>
+        <div class="relative cursor-pointer" onclick="toggleCart()">
+            <i class="fas fa-shopping-basket text-2xl"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-500 text-xs rounded-full px-1.5 font-bold">0</span>
+        </div>
+    </nav>
+
+    <header class="p-8 text-center bg-white border-b">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Occidente Móvil</h1>
+        <p class="text-gray-500 max-w-md mx-auto mb-6">Toma el control total de tus finanzas con la seguridad y respaldo de siempre, ahora desde tu bolsillo.</p>
+        <button class="btn-primary text-white px-8 py-3 rounded-full font-semibold shadow-lg">
+            Explorar Catálogo <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+    </header>
+
+    <section class="p-4 flex gap-2 overflow-x-auto no-scrollbar bg-gray-50">
+        <span class="bg-occidente text-white px-4 py-1 rounded-full text-sm whitespace-nowrap">Todos</span>
+        <span class="bg-white border border-gray-300 px-4 py-1 rounded-full text-sm whitespace-nowrap">Transferencias</span>
+        <span class="bg-white border border-gray-300 px-4 py-1 rounded-full text-sm whitespace-nowrap">Pagos y Recargas</span>
+    </section>
+
+    <main class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+        
+        <div class="card-glass rounded-2xl p-5 relative overflow-hidden">
+            <span class="absolute top-3 right-3 bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">Más usado</span>
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 text-occidente text-2xl">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <h3 class="font-bold text-gray-800 text-lg">Transferencias ACH</h3>
+            <p class="text-gray-500 text-sm mb-4">Envío de fondos a otros bancos en Honduras de forma segura.</p>
+            <div class="flex justify-between items-center">
+                <span class="font-bold text-occidente text-xl">L 0.00*</span>
+                <button onclick="addToCart('Transferencia ACH', 0)" class="btn-primary text-white p-2 rounded-lg"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+
+        <div class="card-glass rounded-2xl p-5 relative overflow-hidden">
+            <span class="absolute top-3 right-3 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">Disponible</span>
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4 text-yellow-600 text-2xl">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3 class="font-bold text-gray-800 text-lg">Servicios Públicos</h3>
+            <p class="text-gray-500 text-sm mb-4">Pago de ENEE, SANAA y servicios municipales al instante.</p>
+            <div class="flex justify-between items-center">
+                <span class="font-bold text-occidente text-xl text-gray-400">Varía</span>
+                <button onclick="addToCart('Pago de Servicios', 'Variable')" class="btn-primary text-white p-2 rounded-lg"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="cart-panel" class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl rounded-t-3xl p-6 transform translate-y-full transition-transform duration-500 z-[60]">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Servicios Seleccionados</h2>
+            <button onclick="toggleCart()"><i class="fas fa-times text-gray-400"></i></button>
+        </div>
+        <div id="cart-items" class="space-y-3 mb-6">
+            </div>
+        <div class="border-t pt-4">
+            <div class="flex justify-between font-bold text-lg mb-4">
+                <span>Total Estimado:</span>
+                <span id="cart-total" class="text-occidente">L 0.00</span>
+            </div>
+            <button onclick="sendWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2">
+                <i class="fab fa-whatsapp text-2xl"></i>
+                Consultar por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-gray-100 p-8 pb-32 text-center border-t">
+        <h3 class="font-bold text-gray-700 mb-2">¿Necesitas ayuda?</h3>
+        <p class="text-sm text-gray-500 mb-4">Nuestro equipo de atención al cliente está listo para asesorarte.</p>
+        <div class="flex justify-center gap-4 text-2xl text-occidente">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fas fa-globe"></i>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+        
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCart();
+            alert(name + " agregado a tu consulta.");
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cart-items');
+            container.innerHTML = cart.map(item => `
+                <div class="flex justify-between text-gray-600 bg-gray-50 p-2 rounded-lg">
+                    <span>${item.name}</span>
+                    <span class="font-bold">${item.price === 'Variable' ? 'Variable' : 'L ' + item.price.toFixed(2)}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const panel = document.getElementById('cart-panel');
+            panel.classList.toggle('translate-y-full');
+        }
+
+        function sendWhatsApp() {
+            const services = cart.map(i => i.name).join(', ');
+            const message = encodeURIComponent(
+                `¡Hola Banco de Occidente! 👋 Estoy interesado en los siguientes servicios de Occidente Móvil:\n\n` +
+                `✅ Detalle: ${services}\n\n` +
+                `¿Me podrían confirmar disponibilidad y los próximos pasos para activarlos? Muchas gracias.`
+            );
+            window.open(`https://wa.me/50497481966?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
